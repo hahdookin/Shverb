@@ -27,8 +27,9 @@ import {
   CardSubtitle,
   CardText,
 } from "reactstrap";
+import { useLocalStorage } from "@uidotdev/usehooks";
 // import "./styles.css";
-import verbs from "./verbs.json";
+import verbsJson from "./verbs.json";
 
 interface Verb {
   Infinitivo: string;
@@ -88,8 +89,20 @@ interface Verb {
   "futuro regolare": string;
   "part. regolare": string;
   Fondamentale: string;
-  Reverso: string;
+  Reverso: number;
 }
+
+const tenses = [
+  "Infinitivo",
+  "Presente",
+  "Imperfetto",
+  "Passato Remoto",
+  "Futuro",
+  "Congiuntivo (Presente)",
+  "Congiuntivo (Imperfetto)",
+  "Condizionale",
+  "Imperativo",
+];
 
 interface CountdownTimerProps {
   seconds: number;
@@ -135,9 +148,20 @@ const useCountdown = () => {
   return { startCountdown, seconds, isActive: intervalId !== undefined };
 };
 
+const TEST_VERBS = [
+  "essere",
+  "avere",
+  "mangiare",
+  "dovere",
+  "volere",
+  "dormire",
+  "sapere",
+];
+
 export default function App() {
-  const [showSplash, setShowSplash] = useState(false);
-  console.log(verbs);
+  const verbs = (verbsJson as Verb[]).filter((verb, i) =>
+    TEST_VERBS.includes(verb.Infinitivo),
+  );
 
   // useEffect(() => {
   //   if (!showSplash && !isActive) {
@@ -145,11 +169,11 @@ export default function App() {
   //   }
   // }, [showSplash]);
 
-  if (showSplash) {
-    return (
-      <SplashScreen showSplash={showSplash} setShowSplash={setShowSplash} />
-    );
-  }
+  // if (showSplash) {
+  //   return (
+  //     <SplashScreen showSplash={showSplash} setShowSplash={setShowSplash} />
+  //   );
+  // }
 
   return (
     <div className="App">
