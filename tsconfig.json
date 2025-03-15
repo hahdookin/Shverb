@@ -4,13 +4,11 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "include": ["src/**/*"],
-  "compilerOptions": {
-      "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true,
-      "baseUrl": "./",
-      "paths": {
-          "@/*": ["src/*"]
-      }
-  }
+"compilerOptions": {
+    "moduleResolution": "node",
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*", "types/**/*"],
+  "exclude": ["node_modules"]
 }
