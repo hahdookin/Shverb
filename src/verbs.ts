@@ -96,15 +96,33 @@ export const getVerbInTenseAndPerson = ({
   tense,
   person,
   gender,
+  ausiliario,
 }: {
   verb: Verb;
   tense: Tense;
   person: Person;
   gender: Gender;
+  ausiliario: Verb,
 }): string => {
   if (tense === "Passato Prossimo") {
     // handle differently
-    return "";
+    const conjugatedAusiliario = getVerbInTenseAndPerson({
+      verb: ausiliario,
+      tense: 'Presente',
+      person,
+      gender,
+      ausiliario,
+    });
+    let participio = verb.Participio;
+    if (ausiliario.Infinitivo === 'essere') {
+      const plural = ["noi", "voi", "loro"].includes(person);
+      let ending = 'o';
+      if (!plural && gender === 'femminile') ending = 'a';
+      if (plural && gender === 'maschile') ending = 'i';
+      if (plural && gender === 'femminile') ending = 'e';
+      participio = verb.Participio.replace(/.$/, ending);
+    }
+    return `${conjugatedAusiliario} ${participio}`;
   }
   if (tense === "Imperativo") {
     // handle differently
@@ -126,6 +144,7 @@ export interface Question {
   person: Person;
   gender: Gender;
   answer: string;
+  ausiliario: Verb;
 }
 export type Game = Question[];
 export const createGame = (): Game => {
@@ -133,6 +152,9 @@ export const createGame = (): Game => {
 
   const verbsList = verbsJson as Verb[];
   const verbs = verbsList.filter((verb) => verb.Fondamentale === "Y");
+  const avere = verbsList.find((verb) => verb.Infinitivo === "avere")!;
+  const essere = verbsList.find((verb) => verb.Infinitivo === "essere")!;
+  const ausiliari = { avere, essere };
 
   return [...Array(5)].map(() => {
     const verb = randomSelection(verbs);
@@ -140,12 +162,20 @@ export const createGame = (): Game => {
     const person = randomSelection(persons);
     const gender = randomSelection(genders);
 
+    let ausiliario: Verb;
+    if (verb.Ausiliario === "avere/essere") {
+      ausiliario = randomSelection([avere, essere]);
+    } else {
+      ausiliario = ausiliari[verb.Ausiliario];
+    }
+
     return {
       verb,
       tense,
       person,
       gender,
-      answer: getVerbInTenseAndPerson({ verb, tense, person, gender }),
+      ausiliario,
+      answer: getVerbInTenseAndPerson({ verb, tense, person, gender, ausiliario }),
     };
   });
 };

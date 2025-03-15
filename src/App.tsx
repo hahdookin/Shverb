@@ -8,6 +8,7 @@ import {
   CardTitle,
   CardText,
   Input,
+  Button,
 } from "reactstrap";
 import StartScreen from "./StartScreen";
 import { createGame, Game, Question } from "./verbs";
@@ -25,12 +26,12 @@ interface GameControllerProps {
 }
 const GameController = ({ game }: GameControllerProps) => {
   const [questionIndex, setQuestionIndex] = useState(1);
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
 
   const curQuestion = game[questionIndex];
 
   const getEmoji = (question: Question) => {
-    const plural = ['noi', 'voi', 'loro'].includes(question.person);
+    const plural = ["noi", "voi", "loro"].includes(question.person);
     if (question.gender === "maschile") {
       return "👨";
     } else {
@@ -42,15 +43,28 @@ const GameController = ({ game }: GameControllerProps) => {
     <Card className="mx-auto">
       <CardBody>
         <CardTitle>
-          #{questionIndex + 1} {curQuestion.tense} ANS: {curQuestion.answer}
+          #{questionIndex + 1} {curQuestion.tense}
         </CardTitle>
         <CardText>
           {getEmoji(curQuestion)} {curQuestion.person}{" "}
           <b>{curQuestion.verb.Infinitivo}</b>
         </CardText>
         <CardText>
-          <Input value={answer} onChange={(e: any) => setAnswer(e.target.value)} />
+          <Input
+            value={answer}
+            onChange={(e: any) => setAnswer(e.target.value)}
+          />
         </CardText>
+        <Button
+          onClick={() => {
+            if (answer === curQuestion.answer) {
+              setQuestionIndex(questionIndex + 1);
+            }
+          }}
+        >
+          Next
+        </Button>
+        <CardText>ANS: {curQuestion.answer}</CardText>
       </CardBody>
     </Card>
   );
