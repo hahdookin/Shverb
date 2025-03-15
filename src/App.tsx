@@ -30,7 +30,9 @@ import {
 import { useLocalStorage } from "@uidotdev/usehooks";
 // import "./styles.css";
 import verbsJson from "./verbs.json";
+import StartScreen from "./StartScreen";
 
+type AusiliarioTypes = "avere" | "essere" | "avere/essere";
 interface Verb {
   Infinitivo: string;
   Significato: string;
@@ -40,7 +42,7 @@ interface Verb {
   "Presente-noi": string;
   "Presente-voi": string;
   "Presente-loro": string;
-  Ausiliario: string;
+  Ausiliario: AusiliarioTypes;
   Participio: string;
   Gerundio: string;
   "Imperfetto-io": string;
@@ -88,21 +90,43 @@ interface Verb {
   "PR regolare": string;
   "futuro regolare": string;
   "part. regolare": string;
-  Fondamentale: string;
+  Fondamentale: "Y" | "N";
   Reverso: number;
 }
+
+const persons = ["io", "tu", "lui/lei", "noi", "voi", "loro"] as const;
+type Person = (typeof persons)[number];
 
 const tenses = [
   "Infinitivo",
   "Presente",
   "Imperfetto",
+  "Passato Prossimo",
   "Passato Remoto",
   "Futuro",
   "Congiuntivo (Presente)",
   "Congiuntivo (Imperfetto)",
   "Condizionale",
   "Imperativo",
-];
+] as const;
+type Tense = (typeof tenses)[number];
+
+const getVerbInTenseAndPerson = (
+  verb: Verb,
+  tense: Tense,
+  person: Person,
+): string => {
+  if (tense === "Passato Prossimo") {
+    // handle differently
+    return;
+  }
+  if (tense === "Infinitivo") {
+    // handle differently
+    return;
+  }
+  const key = `${tense}-${person}`;
+  return verb[key];
+};
 
 interface CountdownTimerProps {
   seconds: number;
@@ -149,64 +173,42 @@ const useCountdown = () => {
 };
 
 const TEST_VERBS = [
-  "essere",
   "avere",
-  "mangiare",
-  "dovere",
-  "volere",
   "dormire",
+  "dovere",
+  "essere",
+  "mangiare",
   "sapere",
+  "volere",
 ];
 
 export default function App() {
+  const [showStart, setShowStart] = useState(true);
   const verbs = (verbsJson as Verb[]).filter((verb, i) =>
     TEST_VERBS.includes(verb.Infinitivo),
   );
 
   // useEffect(() => {
-  //   if (!showSplash && !isActive) {
+  //   if (!showStart && !isActive) {
   //     startCountdown(500);
   //   }
-  // }, [showSplash]);
+  // }, [showStart]);
 
-  // if (showSplash) {
-  //   return (
-  //     <SplashScreen showSplash={showSplash} setShowSplash={setShowSplash} />
-  //   );
-  // }
+  if (showStart) {
+    return <StartScreen showStart={showStart} setShowStart={setShowStart} />;
+  }
 
   return (
     <div className="App">
-      <Navbar className="bg-body-tertiary">
-        <NavbarBrand href="/">FormRL</NavbarBrand>
-        <Nav className="me-auto">
-          <NavItem>
-            <NavLink disabled href="#">
-              HI
-            </NavLink>
-          </NavItem>
-        </Nav>
-
-        <UncontrolledDropdown nav inNavbar style={{ listStyle: "none" }}>
-          <DropdownToggle caret>
-            Welcome <b>Chris</b>
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem active={false}></DropdownItem>
-            <DropdownItem>Option 2</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>Reset</DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </Navbar>
-
-      <Row className="justify-content-center m-4">
-        <Col sm={6}>
-          <Card className="mx-auto">
-            <CardBody></CardBody>
-          </Card>
-        </Col>
-      </Row>
+      <Fade>
+        <Row className="justify-content-center m-4">
+          <Col sm={6}>
+            <Card className="mx-auto">
+              <CardBody>hello!</CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Fade>
     </div>
   );
 }
