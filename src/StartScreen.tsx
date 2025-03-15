@@ -16,7 +16,7 @@ interface StartScreenProps {
   setShowStart: (show: boolean) => void;
 }
 const StartScreen = ({ showStart, setShowStart }: StartScreenProps) => {
-    const [value, setValue] = useLocalStorage('test-key', 1);
+  const [value, setValue] = useLocalStorage("test-key", 1);
   return (
     <Fade in={showStart}>
       <Row className="align-items-center">
@@ -25,14 +25,16 @@ const StartScreen = ({ showStart, setShowStart }: StartScreenProps) => {
             <CardTitle>
               <h4>Shverb</h4>
             </CardTitle>
+            <CardSubtitle>Conjugate l'italiano!</CardSubtitle>
             <CardText>
-            <Input value={value} type="select" onChange={(e: InputEvent) => setValue(e.target.value)}>
+              <Input
+                value={value}
+                type="select"
+                onChange={(e: InputEvent) => setValue(e.target.value)}
+              >
                 <option>1</option>
                 <option>2</option>
-            </Input>
-            </CardText>
-            <CardText>
-              Can you complete the forms and maintain your sanity?
+              </Input>
             </CardText>
             <Fade timeout={2000}>
               <Button color="primary" onClick={() => setShowStart(false)}>
