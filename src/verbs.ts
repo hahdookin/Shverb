@@ -75,7 +75,7 @@ export interface Verb {
 const persons = ["io", "tu", "lui/lei", "noi", "voi", "loro"] as const;
 type Person = (typeof persons)[number];
 
-const genders = ['maschile', 'femminile'] as const;
+const genders = ["maschile", "femminile"] as const;
 type Gender = (typeof genders)[number];
 
 const tenses = [
@@ -98,10 +98,10 @@ export const getVerbInTenseAndPerson = ({
   person,
   gender,
 }: {
-  verb: Verb,
-  tense: Tense,
-  person: Person,
-  gender: Gender,
+  verb: Verb;
+  tense: Tense;
+  person: Person;
+  gender: Gender;
 }): string => {
   if (tense === "Passato Prossimo") {
     // handle differently
@@ -117,22 +117,26 @@ export const getVerbInTenseAndPerson = ({
 
 const randomIndex = (length: number) => Math.floor(Math.random() * length);
 
-function randomSelection<T> (arr: readonly T[]) {
-    return arr[randomIndex(arr.length)];
+function randomSelection<T>(arr: readonly T[]) {
+  return arr[randomIndex(arr.length)];
 }
 
 export const createGame = () => {
-    const tensesToUse = tenses.slice(1, 3);
+  const tensesToUse = tenses.slice(1, 3);
 
-    const verbsList = (verbsJson as Verb[]);
-    const verbs = verbsList.filter((verb) => verb.Fondamentale === 'Y');
+  const verbsList = verbsJson as Verb[];
+  const verbs = verbsList.filter((verb) => verb.Fondamentale === "Y");
 
-    [...Array(5).map(() => {
-        const verb = randomSelection(verbs);
-        const tense = randomSelection(tensesToUse);
-        const person = randomSelection(persons);
-        const gender = randomSelection(genders);
+  return 5;
 
-        return getVerbInTenseAndPerson({verb, tense, person, gender});
-    })]
-}
+  return [
+    ...Array(5).map(() => {
+      const verb = randomSelection(verbs);
+      const tense = randomSelection(tensesToUse);
+      const person = randomSelection(persons);
+      const gender = randomSelection(genders);
+
+      return getVerbInTenseAndPerson({ verb, tense, person, gender });
+    }),
+  ];
+};

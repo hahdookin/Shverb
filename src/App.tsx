@@ -74,14 +74,16 @@ const useCountdown = () => {
   return { startCountdown, seconds, isActive: intervalId !== undefined };
 };
 
-
 export default function App() {
   const [showStart, setShowStart] = useState(true);
+  const [game, setGame] = useState();
 
   const startGame = () => {
-      createGame()
-      setShowStart(false);
-  }
+    const game = createGame();
+    console.log(game);
+    // setGame();
+    setShowStart(false);
+  };
 
   // useEffect(() => {
   //   if (!showStart && !isActive) {
@@ -90,7 +92,7 @@ export default function App() {
   // }, [showStart]);
 
   if (showStart) {
-    return <StartScreen showStart={showStart} setShowStart={setShowStart} />;
+    return <StartScreen showStart={showStart} startGame={startGame} />;
   }
 
   return (

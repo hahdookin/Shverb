@@ -13,9 +13,9 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 
 interface StartScreenProps {
   showStart: boolean;
-  setShowStart: (show: boolean) => void;
+  startGame: () => void;
 }
-const StartScreen = ({ showStart, setShowStart }: StartScreenProps) => {
+const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
   const [value, setValue] = useLocalStorage("test-key", 1);
   return (
     <Fade in={showStart}>
@@ -36,8 +36,8 @@ const StartScreen = ({ showStart, setShowStart }: StartScreenProps) => {
                 <option>2</option>
               </Input>
             </CardText>
-            <Fade timeout={2000}>
-              <Button color="primary" onClick={() => setShowStart(false)}>
+            <Fade>
+              <Button color="primary" onClick={() => startGame()}>
                 Start
               </Button>
             </Fade>
