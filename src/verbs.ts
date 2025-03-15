@@ -71,6 +71,9 @@ export interface Verb {
   Fondamentale: "Y" | "N";
   Reverso: number;
 }
+const isPlural = (person: Person): boolean => {
+  return ["noi", "voi", "loro"].includes(person);
+};
 
 const persons = ["io", "tu", "lui/lei", "noi", "voi", "loro"] as const;
 type Person = (typeof persons)[number];
@@ -102,24 +105,24 @@ export const getVerbInTenseAndPerson = ({
   tense: Tense;
   person: Person;
   gender: Gender;
-  ausiliario: Verb,
+  ausiliario: Verb;
 }): string => {
   if (tense === "Passato Prossimo") {
     // handle differently
     const conjugatedAusiliario = getVerbInTenseAndPerson({
       verb: ausiliario,
-      tense: 'Presente',
+      tense: "Presente",
       person,
       gender,
       ausiliario,
     });
     let participio = verb.Participio;
-    if (ausiliario.Infinitivo === 'essere') {
-      const plural = ["noi", "voi", "loro"].includes(person);
-      let ending = 'o';
-      if (!plural && gender === 'femminile') ending = 'a';
-      if (plural && gender === 'maschile') ending = 'i';
-      if (plural && gender === 'femminile') ending = 'e';
+    if (ausiliario.Infinitivo === "essere") {
+      const plural = isPlural(person);
+      let ending = "o";
+      if (!plural && gender === "femminile") ending = "a";
+      if (plural && gender === "maschile") ending = "i";
+      if (plural && gender === "femminile") ending = "e";
       participio = verb.Participio.replace(/.$/, ending);
     }
     return `${conjugatedAusiliario} ${participio}`;
@@ -145,10 +148,11 @@ export interface Question {
   gender: Gender;
   answer: string;
   ausiliario: Verb;
+  plural: boolean;
 }
 export type Game = Question[];
 export const createGame = (): Game => {
-  const tensesToUse = tenses.slice(1, 3);
+  const tensesToUse = tenses.slice(0, 3);
 
   const verbsList = verbsJson as Verb[];
   const verbs = verbsList.filter((verb) => verb.Fondamentale === "Y");
@@ -175,7 +179,14 @@ export const createGame = (): Game => {
       person,
       gender,
       ausiliario,
-      answer: getVerbInTenseAndPerson({ verb, tense, person, gender, ausiliario }),
+      plural: isPlural(person),
+      answer: getVerbInTenseAndPerson({
+        verb,
+        tense,
+        person,
+        gender,
+        ausiliario,
+      }),
     };
   });
 };

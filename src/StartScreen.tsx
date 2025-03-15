@@ -30,7 +30,7 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
               <Input
                 value={value}
                 type="select"
-                onChange={(e: InputEvent) => setValue(e.target.value)}
+                onChange={(e: any) => setValue(e.target.value)}
               >
                 <option>1</option>
                 <option>2</option>

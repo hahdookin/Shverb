@@ -23,42 +23,72 @@ import { createGame, Game, Question } from "./verbs";
 
 interface GameControllerProps {
   game: Game;
+  onCancelGame: () => void;
 }
-const GameController = ({ game }: GameControllerProps) => {
+type AnswerStatus = "pending" | "wrong" | "correct";
+const GameController = ({ game, onCancelGame }: GameControllerProps) => {
   const [questionIndex, setQuestionIndex] = useState(1);
   const [answer, setAnswer] = useState("");
+  const [timeoutId, setTimeoutId] = useState<number | undefined>();
+  const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("pending");
 
   const curQuestion = game[questionIndex];
 
   const getEmoji = (question: Question) => {
-    const plural = ["noi", "voi", "loro"].includes(question.person);
     if (question.gender === "maschile") {
       return "👨";
     } else {
       return "👩";
     }
   };
+  const onCorrectAnswer = () => {
+    setAnswerStatus("correct");
+    const timeoutId = setTimeout(() => {
+      setQuestionIndex(questionIndex + 1);
+      setTimeoutId(undefined);
+      setAnswerStatus("pending");
+      setAnswer("");
+    }, 750);
+    setTimeoutId(timeoutId);
+  };
 
   return (
     <Card className="mx-auto">
       <CardBody>
         <CardTitle>
-          #{questionIndex + 1} {curQuestion.tense}
+          <Row>
+            <Col>
+              #{questionIndex + 1} {curQuestion.tense}
+            </Col>
+            <Col
+              className="user-select-none cursor-pointer"
+              onClick={onCancelGame}
+              xs={2}
+            >
+              ✖️
+            </Col>
+          </Row>
         </CardTitle>
         <CardText>
           {getEmoji(curQuestion)} {curQuestion.person}{" "}
-          <b>{curQuestion.verb.Infinitivo}</b>
+          <b>{curQuestion.verb.Infinitivo}</b>{" "}
+          <span style={{ color: 'lightgray', fontSize: '.8em'}}>{ curQuestion.verb.Significato }</span>
         </CardText>
         <CardText>
           <Input
+            invalid={answerStatus === "wrong"}
+            valid={answerStatus === "correct"}
             value={answer}
             onChange={(e: any) => setAnswer(e.target.value)}
           />
         </CardText>
         <Button
+          disabled={!!timeoutId}
           onClick={() => {
             if (answer === curQuestion.answer) {
-              setQuestionIndex(questionIndex + 1);
+              onCorrectAnswer();
+            } else {
+              setAnswerStatus("wrong");
             }
           }}
         >
@@ -92,7 +122,10 @@ export default function App() {
       <Fade>
         <Row className="justify-content-center m-4">
           <Col sm={6}>
-            <GameController game={game} />
+            <GameController
+              game={game}
+              onCancelGame={() => setGame(undefined)}
+            />
           </Col>
         </Row>
       </Fade>
