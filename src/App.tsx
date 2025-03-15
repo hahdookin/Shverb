@@ -28,7 +28,7 @@ import {
   CardText,
 } from "reactstrap";
 import StartScreen from "./StartScreen";
-import type { Verb } from "./verbs";
+import { Verb, createGame } from "./verbs";
 
 interface CountdownTimerProps {
   seconds: number;
@@ -74,21 +74,14 @@ const useCountdown = () => {
   return { startCountdown, seconds, isActive: intervalId !== undefined };
 };
 
-const TEST_VERBS = [
-  "avere",
-  "dormire",
-  "dovere",
-  "essere",
-  "mangiare",
-  "sapere",
-  "volere",
-];
 
 export default function App() {
   const [showStart, setShowStart] = useState(true);
-  const verbs = (verbsJson as Verb[]).filter((verb, i) =>
-    TEST_VERBS.includes(verb.Infinitivo),
-  );
+
+  const startGame = () => {
+      createGame()
+      setShowStart(false);
+  }
 
   // useEffect(() => {
   //   if (!showStart && !isActive) {
