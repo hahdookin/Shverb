@@ -1,5 +1,5 @@
 import verbsJson from "./verbsList.json";
-import mostCommonVerbs from './commonVerbs.json';
+import mostCommonVerbs from "./commonVerbs.json";
 
 export const verbListOptions = [
   "10 most common",
@@ -9,7 +9,7 @@ export const verbListOptions = [
   "Fundemental",
   "All",
 ] as const;
-export type VerbListOption = (typeof verbListOptions)[number]
+export type VerbListOption = (typeof verbListOptions)[number];
 
 type AusiliarioTypes = "avere" | "essere" | "avere/essere";
 export interface Verb {
@@ -153,19 +153,25 @@ export interface Question {
 }
 export type Game = Question[];
 export const createGame = (): Game => {
-  const tensesToUse: Tense[] = ["Presente", "Imperfetto", "Passato Prossimo", "Futuro"];
+  const tensesToUse: Tense[] = [
+    "Presente",
+    "Imperfetto",
+    "Passato Prossimo",
+    "Futuro",
+  ];
 
-  const verbListOption = window.localStorage.getItem(
-    "setting-verb-list-option"
-  )?.replace(/"/g, '') as VerbListOption ?? 'All';
+  const verbListOption =
+    (window.localStorage
+      .getItem("setting-verb-list-option")
+      ?.replace(/"/g, "") as VerbListOption) ?? "All";
 
   let verbSet: Set<string> | undefined;
   if (verbListOptions.slice(0, 4).includes(verbListOption)) {
     let n;
-    if (verbListOption === '10 most common') n = 10;
-    if (verbListOption === '20 most common') n = 20;
-    if (verbListOption === '30 most common') n = 30;
-    if (verbListOption === '50 most common') n = 50;
+    if (verbListOption === "10 most common") n = 10;
+    if (verbListOption === "20 most common") n = 20;
+    if (verbListOption === "30 most common") n = 30;
+    if (verbListOption === "50 most common") n = 50;
     verbSet = new Set(mostCommonVerbs.slice(0, n));
   }
 
@@ -174,17 +180,17 @@ export const createGame = (): Game => {
     if (verbSet) {
       return verbSet?.has(verb.Infinitivo);
     }
-    if (verbListOption === 'Fundemental') {
-      return verb.Fondamentale === 'Y';
+    if (verbListOption === "Fundemental") {
+      return verb.Fondamentale === "Y";
     }
     return true;
   });
-  
+
   const avere = verbsList.find((verb) => verb.Infinitivo === "avere")!;
   const essere = verbsList.find((verb) => verb.Infinitivo === "essere")!;
   const ausiliari = { avere, essere };
 
-  return [...Array(5)].map(() => {
+  return [...Array(100)].map(() => {
     const verb = randomSelection(verbs);
     const tense = randomSelection(tensesToUse);
     const person = randomSelection(persons);

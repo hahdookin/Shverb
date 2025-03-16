@@ -23,7 +23,6 @@ import { createGame, Game, Question } from "./verbs";
 //     return Math.random() <= percent;
 // }
 
-
 const vowelSet = ["a", "e", "i", "o", "u"] as const;
 type VowelSet = (typeof vowelSet)[number];
 
@@ -53,7 +52,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
     if (!answer.length) {
       setShowVowelSet(undefined);
       return;
-    };
+    }
     const lastChar = answer[answer.length - 1] as VowelSet;
     if (vowelSet.includes(lastChar)) {
       setShowVowelSet(lastChar);
@@ -78,6 +77,14 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
       setAnswer("");
     }, 750);
     setTimeoutId(timeoutId);
+  };
+
+  const onNextClicked = () => {
+    if (answer === curQuestion.answer) {
+      onCorrectAnswer();
+    } else {
+      setAnswerStatus("wrong");
+    }
   };
 
   return (
@@ -107,27 +114,23 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
         </CardText>
         <CardText>
           <InputGroup>
-          <InputGroupText>{curQuestion.person}</InputGroupText>
-          <Input
-            invalid={answerStatus === "wrong"}
-            valid={answerStatus === "correct"}
-            value={answer}
-            onChange={(e: any) => setAnswer(e.target.value)}
-          />
+            <InputGroupText>{curQuestion.person}</InputGroupText>
+            <Input
+              invalid={answerStatus === "wrong"}
+              valid={answerStatus === "correct"}
+              value={answer}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onNextClicked();
+                }
+              }}
+              onChange={(e: any) => setAnswer(e.target.value)}
+            />
           </InputGroup>
         </CardText>
         <Row>
           <Col>
-            <Button
-              disabled={!!timeoutId}
-              onClick={() => {
-                if (answer === curQuestion.answer) {
-                  onCorrectAnswer();
-                } else {
-                  setAnswerStatus("wrong");
-                }
-              }}
-            >
+            <Button disabled={!!timeoutId} onClick={onNextClicked}>
               Next
             </Button>
           </Col>
@@ -144,7 +147,9 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
               ))}
           </Col>
         </Row>
-        <CardText style={{color: 'lightgrey'}}>ANS: {curQuestion.answer}</CardText>
+        <CardText style={{ color: "lightgrey" }}>
+          ANS: {curQuestion.answer}
+        </CardText>
       </CardBody>
     </Card>
   );

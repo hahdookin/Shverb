@@ -19,7 +19,10 @@ interface StartScreenProps {
   startGame: () => void;
 }
 const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
-  const [chosenVerbListOption, setChosenVerbListOption] = useLocalStorage("setting-verb-list-option", 'fundamental');
+  const [chosenVerbListOption, setChosenVerbListOption] = useLocalStorage(
+    "setting-verb-list-option",
+    "fundamental",
+  );
   return (
     <Fade in={showStart}>
       <Row className="align-items-center">
@@ -33,18 +36,18 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
               <Label check for="verb-list-option">
                 Verbs to use
               </Label>
-            <FormGroup>
-              <Input
-              id="verb-list-option"
-                value={chosenVerbListOption}
-                type="select"
-                onChange={(e: any) => setChosenVerbListOption(e.target.value)}
-              >
-                {verbListOptions.map((verbListOption: VerbListOption) => (
-                  <option key={verbListOption}>{ verbListOption }</option>
-                ))}
-              </Input>
-            </FormGroup>
+              <FormGroup>
+                <Input
+                  id="verb-list-option"
+                  value={chosenVerbListOption}
+                  type="select"
+                  onChange={(e: any) => setChosenVerbListOption(e.target.value)}
+                >
+                  {verbListOptions.map((verbListOption: VerbListOption) => (
+                    <option key={verbListOption}>{verbListOption}</option>
+                  ))}
+                </Input>
+              </FormGroup>
             </CardText>
             <FormGroup check>
               <Input
