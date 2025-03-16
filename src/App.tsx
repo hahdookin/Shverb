@@ -27,7 +27,7 @@ interface GameControllerProps {
 }
 type AnswerStatus = "pending" | "wrong" | "correct";
 const GameController = ({ game, onCancelGame }: GameControllerProps) => {
-  const [questionIndex, setQuestionIndex] = useState(1);
+  const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState("");
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("pending");
@@ -58,7 +58,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
         <CardTitle>
           <Row>
             <Col>
-              #{questionIndex + 1} {curQuestion.tense}
+              <span style={{ color: "grey"}}>#{questionIndex + 1}</span> {curQuestion.tense}
             </Col>
             <Col
               className="user-select-none cursor-pointer"
