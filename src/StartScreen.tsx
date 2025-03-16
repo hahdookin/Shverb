@@ -31,12 +31,11 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
             <CardTitle>
               <h4>Shverb</h4>
             </CardTitle>
-            <CardSubtitle>Conjugate l'italiano!</CardSubtitle>
             <CardText>
-              <Label check for="verb-list-option">
-                Verbs to use
-              </Label>
-              <FormGroup>
+              <FormGroup className="mt-2">
+                <Label check for="verb-list-option">
+                  Verbs to use
+                </Label>
                 <Input
                   id="verb-list-option"
                   value={chosenVerbListOption}
@@ -49,16 +48,6 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
                 </Input>
               </FormGroup>
             </CardText>
-            <FormGroup check>
-              <Input
-                id="only-fundamental"
-                onChange={() => {}}
-                type="checkbox"
-              />{" "}
-              <Label check for="only-fundamental">
-                Only fundamental verbs
-              </Label>
-            </FormGroup>
             <Fade>
               <Button color="primary" onClick={() => startGame()}>
                 Start

@@ -87,6 +87,20 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
     }
   };
 
+  const onKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      onNextClicked();
+    }
+    if (['1', '2'].includes(e.key) && showVowelSet) {
+      e.preventDefault();
+      const index = Number(e.key) - 1;
+      const set = vowelSetMap[showVowelSet];
+      const vowel = set[index];
+      if (!vowel) return;
+      setAnswer(answer.replace(/.$/, vowel));
+    }
+  }
+
   return (
     <Card className="mx-auto">
       <CardBody>
@@ -119,11 +133,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
               invalid={answerStatus === "wrong"}
               valid={answerStatus === "correct"}
               value={answer}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onNextClicked();
-                }
-              }}
+              onKeyDown={onKeyDown}
               onChange={(e: any) => setAnswer(e.target.value)}
             />
           </InputGroup>
