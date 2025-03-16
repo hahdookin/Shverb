@@ -21,6 +21,10 @@ import { createGame, Game, Question } from "./verbs";
 //     return Math.random() <= percent;
 // }
 
+
+const vowelSet = ["a", "e", "i", "o", "u"] as const;
+type VowelSet = (typeof vowelSet)[number];
+
 interface GameControllerProps {
   game: Game;
   onCancelGame: () => void;
@@ -31,8 +35,30 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
   const [answer, setAnswer] = useState("");
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("pending");
+  const [showVowelSet, setShowVowelSet] = useState<VowelSet | undefined>();
 
   const curQuestion = game[questionIndex];
+
+  const vowelSetMap = {
+    a: ["à"],
+    e: ["è", "é"],
+    i: ["ì"],
+    o: ["ò", "ó"],
+    u: ["ù"],
+  };
+
+  useEffect(() => {
+    if (!answer.length) {
+      setShowVowelSet(undefined);
+      return;
+    };
+    const lastChar = answer[answer.length - 1] as VowelSet;
+    if (vowelSet.includes(lastChar)) {
+      setShowVowelSet(lastChar);
+    } else {
+      setShowVowelSet(undefined);
+    }
+  }, [answer]);
 
   const getEmoji = (question: Question) => {
     if (question.gender === "maschile") {
@@ -58,7 +84,8 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
         <CardTitle>
           <Row>
             <Col>
-              <span style={{ color: "grey"}}>#{questionIndex + 1}</span> {curQuestion.tense}
+              <span style={{ color: "grey" }}>#{questionIndex + 1}</span>{" "}
+              {curQuestion.tense}
             </Col>
             <Col
               className="user-select-none cursor-pointer"
@@ -72,7 +99,9 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
         <CardText>
           {getEmoji(curQuestion)} {curQuestion.person}{" "}
           <b>{curQuestion.verb.Infinitivo}</b>{" "}
-          <span style={{ color: 'lightgray', fontSize: '.8em'}}>{ curQuestion.verb.Significato }</span>
+          <span style={{ color: "lightgray", fontSize: ".8em" }}>
+            {curQuestion.verb.Significato}
+          </span>
         </CardText>
         <CardText>
           <Input
@@ -82,18 +111,34 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
             onChange={(e: any) => setAnswer(e.target.value)}
           />
         </CardText>
-        <Button
-          disabled={!!timeoutId}
-          onClick={() => {
-            if (answer === curQuestion.answer) {
-              onCorrectAnswer();
-            } else {
-              setAnswerStatus("wrong");
-            }
-          }}
-        >
-          Next
-        </Button>
+        <Row>
+          <Col>
+            <Button
+              disabled={!!timeoutId}
+              onClick={() => {
+                if (answer === curQuestion.answer) {
+                  onCorrectAnswer();
+                } else {
+                  setAnswerStatus("wrong");
+                }
+              }}
+            >
+              Next
+            </Button>
+          </Col>
+          <Col>
+            {showVowelSet &&
+              vowelSetMap[showVowelSet].map((vowel) => (
+                <Button
+                  onClick={() => {
+                    setAnswer(answer.replace(/.$/, vowel));
+                  }}
+                >
+                  {vowel}
+                </Button>
+              ))}
+          </Col>
+        </Row>
         <CardText>ANS: {curQuestion.answer}</CardText>
       </CardBody>
     </Card>
@@ -106,12 +151,6 @@ export default function App() {
   const startGame = () => {
     setGame(createGame());
   };
-
-  // useEffect(() => {
-  //   if (!showStart && !isActive) {
-  //     startCountdown(500);
-  //   }
-  // }, [showStart]);
 
   if (!game) {
     return <StartScreen showStart={!game} startGame={startGame} />;

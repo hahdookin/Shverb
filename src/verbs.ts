@@ -152,7 +152,7 @@ export interface Question {
 }
 export type Game = Question[];
 export const createGame = (): Game => {
-  const tensesToUse = tenses.slice(0, 3);
+  const tensesToUse: Tense[] = ["Presente", "Imperfetto", "Passato Prossimo", "Futuro"];
 
   const verbsList = verbsJson as Verb[];
   const verbs = verbsList.filter((verb) => verb.Fondamentale === "Y");
