@@ -9,6 +9,8 @@ import {
   CardText,
   Input,
   Button,
+  InputGroup,
+  InputGroupText,
 } from "reactstrap";
 import StartScreen from "./StartScreen";
 import { createGame, Game, Question } from "./verbs";
@@ -104,12 +106,15 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
           </span>
         </CardText>
         <CardText>
+          <InputGroup>
+          <InputGroupText>{curQuestion.person}</InputGroupText>
           <Input
             invalid={answerStatus === "wrong"}
             valid={answerStatus === "correct"}
             value={answer}
             onChange={(e: any) => setAnswer(e.target.value)}
           />
+          </InputGroup>
         </CardText>
         <Row>
           <Col>
@@ -139,7 +144,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
               ))}
           </Col>
         </Row>
-        <CardText>ANS: {curQuestion.answer}</CardText>
+        <CardText style={{color: 'lightgrey'}}>ANS: {curQuestion.answer}</CardText>
       </CardBody>
     </Card>
   );

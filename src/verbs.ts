@@ -1,14 +1,15 @@
 import verbsJson from "./verbsList.json";
+import mostCommonVerbs from './commonVerbs.json';
 
-const TEST_VERBS = [
-  "avere",
-  "dormire",
-  "dovere",
-  "essere",
-  "mangiare",
-  "sapere",
-  "volere",
-];
+export const verbListOptions = [
+  "10 most common",
+  "20 most common",
+  "30 most common",
+  "50 most common",
+  "Fundemental",
+  "All",
+] as const;
+export type VerbListOption = (typeof verbListOptions)[number]
 
 type AusiliarioTypes = "avere" | "essere" | "avere/essere";
 export interface Verb {
@@ -154,8 +155,31 @@ export type Game = Question[];
 export const createGame = (): Game => {
   const tensesToUse: Tense[] = ["Presente", "Imperfetto", "Passato Prossimo", "Futuro"];
 
+  const verbListOption = window.localStorage.getItem(
+    "setting-verb-list-option"
+  )?.replace(/"/g, '') as VerbListOption ?? 'All';
+
+  let verbSet: Set<string> | undefined;
+  if (verbListOptions.slice(0, 4).includes(verbListOption)) {
+    let n;
+    if (verbListOption === '10 most common') n = 10;
+    if (verbListOption === '20 most common') n = 20;
+    if (verbListOption === '30 most common') n = 30;
+    if (verbListOption === '50 most common') n = 50;
+    verbSet = new Set(mostCommonVerbs.slice(0, n));
+  }
+
   const verbsList = verbsJson as Verb[];
-  const verbs = verbsList.filter((verb) => verb.Fondamentale === "Y");
+  const verbs = verbsList.filter((verb) => {
+    if (verbSet) {
+      return verbSet?.has(verb.Infinitivo);
+    }
+    if (verbListOption === 'Fundemental') {
+      return verb.Fondamentale === 'Y';
+    }
+    return true;
+  });
+  
   const avere = verbsList.find((verb) => verb.Infinitivo === "avere")!;
   const essere = verbsList.find((verb) => verb.Infinitivo === "essere")!;
   const ausiliari = { avere, essere };

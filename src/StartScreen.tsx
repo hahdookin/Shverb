@@ -12,14 +12,14 @@ import {
   Label,
 } from "reactstrap";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { VerbListOption, verbListOptions } from "./verbs";
 
 interface StartScreenProps {
   showStart: boolean;
   startGame: () => void;
 }
 const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
-  const [value, setValue] = useLocalStorage("test-key", 1);
-  const [onlyFundamental, setOnlyFundamental] = useLocalStorage('setting-only-fundamental', true);
+  const [chosenVerbListOption, setChosenVerbListOption] = useLocalStorage("setting-verb-list-option", 'fundamental');
   return (
     <Fade in={showStart}>
       <Row className="align-items-center">
@@ -30,21 +30,27 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
             </CardTitle>
             <CardSubtitle>Conjugate l'italiano!</CardSubtitle>
             <CardText>
+              <Label check for="verb-list-option">
+                Verbs to use
+              </Label>
+            <FormGroup>
               <Input
-                value={value}
+              id="verb-list-option"
+                value={chosenVerbListOption}
                 type="select"
-                onChange={(e: any) => setValue(e.target.value)}
+                onChange={(e: any) => setChosenVerbListOption(e.target.value)}
               >
-                <option>1</option>
-                <option>2</option>
+                {verbListOptions.map((verbListOption: VerbListOption) => (
+                  <option key={verbListOption}>{ verbListOption }</option>
+                ))}
               </Input>
+            </FormGroup>
             </CardText>
             <FormGroup check>
               <Input
                 id="only-fundamental"
-                onChange={(e: any) => setOnlyFundamental(e.target.checked)}
+                onChange={() => {}}
                 type="checkbox"
-                checked={onlyFundamental}
               />{" "}
               <Label check for="only-fundamental">
                 Only fundamental verbs
