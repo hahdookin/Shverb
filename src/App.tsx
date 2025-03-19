@@ -14,7 +14,8 @@ import {
 } from "reactstrap";
 import StartScreen from "./StartScreen";
 import { createGame, Game, Question } from "./verbs";
-import './App.css';
+import "./App.css";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 // const randomChance = (x: number, y: number) => {
 //   return Math.random() <= x / y;
@@ -35,6 +36,10 @@ type AnswerStatus = "pending" | "wrong" | "correct";
 const GameController = ({ game, onCancelGame }: GameControllerProps) => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState("");
+  const [showCorrectAnswer, setShowCorrectAnswer] = useLocalStorage(
+    "show-correct-answer",
+    false,
+  );
   const [timeoutId, setTimeoutId] = useState<number | undefined>();
   const [answerStatus, setAnswerStatus] = useState<AnswerStatus>("pending");
   const [showVowelSet, setShowVowelSet] = useState<VowelSet | undefined>();
@@ -81,7 +86,8 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
   };
 
   const onNextClicked = () => {
-    if (answer.toLowerCase() === curQuestion.answer) {
+    const answerToUse = answer.toLowerCase().trim();
+    if (answerToUse === curQuestion.answer) {
       onCorrectAnswer();
     } else {
       setAnswerStatus("wrong");
@@ -92,7 +98,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
     if (e.key === "Enter") {
       onNextClicked();
     }
-    if (['1', '2'].includes(e.key) && showVowelSet) {
+    if (["1", "2"].includes(e.key) && showVowelSet) {
       e.preventDefault();
       const index = Number(e.key) - 1;
       const set = vowelSetMap[showVowelSet];
@@ -100,7 +106,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
       if (!vowel) return;
       setAnswer(answer.replace(/.$/, vowel));
     }
-  }
+  };
 
   return (
     <Card className="mx-auto">
@@ -113,7 +119,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
             </Col>
             <Col
               className="user-select-none cursor-pointer"
-              style={{ textAlign: 'right'}}
+              style={{ textAlign: "right" }}
               onClick={onCancelGame}
               xs={2}
             >
@@ -129,7 +135,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
           </span>
         </CardText>
         <CardText>
-          <InputGroup style={{ fontSize: '16px'}}>
+          <InputGroup style={{ fontSize: "16px" }}>
             <InputGroupText>{curQuestion.person}</InputGroupText>
             <Input
               invalid={answerStatus === "wrong"}
@@ -159,8 +165,15 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
               ))}
           </Col>
         </Row>
-        <CardText style={{ color: "lightgrey" }}>
-          ANS: {curQuestion.answer}
+        <CardText style={{ color: "lightgrey" }} className="mt-2"
+            onClick={() => setShowCorrectAnswer((prev) => !prev)}
+        >
+          <span>{showCorrectAnswer ? "🐵" : "🙈"}</span>{" "}
+          <span
+            className="cursor-pointer text-decoration-underline text-select-none"
+          >
+            {showCorrectAnswer ? curQuestion.answer : "Reveal answer"}
+          </span>
         </CardText>
       </CardBody>
     </Card>
@@ -176,16 +189,16 @@ export default function App() {
 
   if (!game) {
     return (
-    <div className="App">
-      <Fade>
-        <Row className="justify-content-center m-4">
-          <Col sm={6}>
-            <StartScreen showStart={!game} startGame={startGame} />
-          </Col>
-        </Row>
-      </Fade>
-    </div>
-  )
+      <div className="App">
+        <Fade>
+          <Row className="justify-content-center m-4">
+            <Col sm={6}>
+              <StartScreen showStart={!game} startGame={startGame} />
+            </Col>
+          </Row>
+        </Fade>
+      </div>
+    );
   }
 
   return (

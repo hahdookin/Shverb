@@ -28,11 +28,11 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
         <Card className="mx-auto">
           <CardBody>
             <CardTitle>
-              <h4>Shverb</h4>
+              <h4>Conjugate: Verbi Italiani</h4>
             </CardTitle>
             <CardText>
               <FormGroup className="mt-2">
-                <Label check for="verb-list-option">
+                <Label check for="verb-list-option" className="text-muted">
                   Verbs to use
                 </Label>
                 <Input
