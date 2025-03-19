@@ -158,6 +158,7 @@ export const createGame = (): Game => {
     "Imperfetto",
     "Passato Prossimo",
     "Futuro",
+    "Condizionale",
   ];
 
   const verbListOption =

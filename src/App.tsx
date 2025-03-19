@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import StartScreen from "./StartScreen";
 import { createGame, Game, Question } from "./verbs";
+import './App.css';
 
 // const randomChance = (x: number, y: number) => {
 //   return Math.random() <= x / y;
@@ -80,7 +81,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
   };
 
   const onNextClicked = () => {
-    if (answer === curQuestion.answer) {
+    if (answer.toLowerCase() === curQuestion.answer) {
       onCorrectAnswer();
     } else {
       setAnswerStatus("wrong");
@@ -105,13 +106,14 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
     <Card className="mx-auto">
       <CardBody>
         <CardTitle>
-          <Row>
+          <Row className="justify-content-between">
             <Col>
               <span style={{ color: "grey" }}>#{questionIndex + 1}</span>{" "}
               {curQuestion.tense}
             </Col>
             <Col
               className="user-select-none cursor-pointer"
+              style={{ textAlign: 'right'}}
               onClick={onCancelGame}
               xs={2}
             >
@@ -127,7 +129,7 @@ const GameController = ({ game, onCancelGame }: GameControllerProps) => {
           </span>
         </CardText>
         <CardText>
-          <InputGroup>
+          <InputGroup style={{ fontSize: '16px'}}>
             <InputGroupText>{curQuestion.person}</InputGroupText>
             <Input
               invalid={answerStatus === "wrong"}
@@ -173,7 +175,17 @@ export default function App() {
   };
 
   if (!game) {
-    return <StartScreen showStart={!game} startGame={startGame} />;
+    return (
+    <div className="App">
+      <Fade>
+        <Row className="justify-content-center m-4">
+          <Col sm={6}>
+            <StartScreen showStart={!game} startGame={startGame} />
+          </Col>
+        </Row>
+      </Fade>
+    </div>
+  )
   }
 
   return (

@@ -5,7 +5,6 @@ import {
   Card,
   CardBody,
   CardTitle,
-  CardSubtitle,
   CardText,
   Input,
   FormGroup,
@@ -26,7 +25,7 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
   return (
     <Fade in={showStart}>
       <Row className="align-items-center">
-        <Card className="w-75 mx-auto mt-4">
+        <Card className="mx-auto">
           <CardBody>
             <CardTitle>
               <h4>Shverb</h4>
