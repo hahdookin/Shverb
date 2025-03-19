@@ -164,7 +164,7 @@ export const createGame = (): Game => {
   const verbListOption =
     (window.localStorage
       .getItem("setting-verb-list-option")
-      ?.replace(/"/g, "") as VerbListOption) ?? "All";
+      ?.replace(/"/g, "") as VerbListOption) ?? "10 most common";
 
   let verbSet: Set<string> | undefined;
   if (verbListOptions.slice(0, 4).includes(verbListOption)) {
