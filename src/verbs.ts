@@ -82,7 +82,7 @@ type Person = (typeof persons)[number];
 const genders = ["maschile", "femminile"] as const;
 type Gender = (typeof genders)[number];
 
-const tenses = [
+export const tenses = [
   "Presente",
   "Imperfetto",
   "Passato Prossimo",
@@ -93,7 +93,7 @@ const tenses = [
   "Condizionale",
   "Imperativo",
 ] as const;
-type Tense = (typeof tenses)[number];
+export type Tense = (typeof tenses)[number];
 
 export const getVerbInTenseAndPerson = ({
   verb,
@@ -153,13 +153,11 @@ export interface Question {
 }
 export type Game = Question[];
 export const createGame = (): Game => {
-  const tensesToUse: Tense[] = [
-    "Presente",
-    "Imperfetto",
-    "Passato Prossimo",
-    "Futuro",
-    "Condizionale",
-  ];
+  const tensesToUse: Tense[] = Object.entries(
+    JSON.parse(window.localStorage.getItem("setting-selected-tenses") ?? "[]")
+  )
+    .filter(([, include]) => include)
+    .map(([tense]) => tense as Tense);
 
   const verbListOption =
     (window.localStorage

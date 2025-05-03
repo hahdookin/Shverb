@@ -20,8 +20,23 @@ interface StartScreenProps {
 const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
   const [chosenVerbListOption, setChosenVerbListOption] = useLocalStorage(
     "setting-verb-list-option",
-    "fundamental",
+    "10 most common"
   );
+  const [tenseInputs, setTenseInputs] = useLocalStorage(
+    "setting-selected-tenses",
+    {
+      Presente: true,
+      Imperfetto: true,
+      "Passato Prossimo": true,
+      Futuro: true,
+      Condizionale: true,
+      // "Passato Remoto",
+      // "Congiuntivo (Presente)",
+      // "Congiuntivo (Imperfetto)",
+      // "Imperativo",
+    }
+  );
+
   return (
     <Fade in={showStart}>
       <Row className="align-items-center">
@@ -46,6 +61,21 @@ const StartScreen = ({ showStart, startGame }: StartScreenProps) => {
                   ))}
                 </Input>
               </FormGroup>
+              {Object.entries(tenseInputs).map(([tense, checked]) => (
+                <FormGroup check key={tense}>
+                  <Input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) =>
+                      setTenseInputs({
+                        ...tenseInputs,
+                        [tense]: e.target.checked,
+                      })
+                    }
+                  />
+                  <Label>{tense}</Label>
+                </FormGroup>
+              ))}
             </CardText>
             <Fade>
               <Button color="primary" onClick={() => startGame()}>
